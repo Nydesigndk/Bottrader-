@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User account information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "Portfolio": {
+      "title": "User Portfolio",
+      "description": "User's trading portfolio",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "balance": { "type": "number" },
+        "positions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "symbol": { "type": "string" },
+              "type": { "type": "string", "enum": ["BUY", "SELL"] },
+              "price": { "type": "number" },
+              "amount": { "type": "number" },
+              "timestamp": { "type": "number" },
+              "status": { "type": "string", "enum": ["OPEN", "CLOSED"] },
+              "takeProfit": { "type": "number" },
+              "stopLoss": { "type": "number" },
+              "profit": { "type": "number" }
+            },
+            "required": ["id", "symbol", "type", "price", "amount", "timestamp", "status"]
+          }
+        },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "balance", "positions", "updatedAt"]
+    },
+    "Settings": {
+      "title": "User Settings",
+      "description": "User's custom chart and trading settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "chartTheme": { "type": "string", "enum": ["dark", "light"] },
+        "autoBotEnabled": { "type": "boolean" },
+        "defaultTakeProfitPct": { "type": "number" },
+        "defaultStopLossPct": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "chartTheme", "autoBotEnabled", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Stores user profiles"
+    },
+    "portfolios/{userId}": {
+      "schema": { "$ref": "#/entities/Portfolio" },
+      "description": "Stores user portfolios"
+    },
+    "settings/{userId}": {
+      "schema": { "$ref": "#/entities/Settings" },
+      "description": "Stores user settings"
+    }
+  }
+}
